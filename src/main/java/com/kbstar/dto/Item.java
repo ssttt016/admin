@@ -1,18 +1,21 @@
 package com.kbstar.dto;
 
-
 import lombok.*;
 
 import java.util.Date;
-@NoArgsConstructor
+
 @AllArgsConstructor
-@Getter
+@NoArgsConstructor
 @Setter
+@Getter
 @ToString
 public class Item {
+
     private int id;
     private String name;
     private int price;
     private String imgname;
-    private Date regdate;
+    //private Date regdate;  -> all.jsp에도 수정 (regdate -> rdate)
+    private Date rdate;
+
 }
