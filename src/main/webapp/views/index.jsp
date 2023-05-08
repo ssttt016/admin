@@ -10,6 +10,12 @@
 <script src="https://code.highcharts.com/themes/high-contrast-light.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/cylinder.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cefdd74a1aa766d9e74b1532c04f5b77"></script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+<%--marker  kakao script--%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -101,6 +107,24 @@
             </div>
         </li>
 
+        <!--Marker    Nav Item - Utilities Collapse Menu  -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#marker_mgt"
+               aria-expanded="true" aria-controls="marker_mgt">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Marker</span>
+            </a>
+            <div id="marker_mgt" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Marker Managements:</h6>
+                    <a class="collapse-item" href="/marker/add">ADD</a>
+                    <a class="collapse-item" href="/marker/all">ALL</a>
+                    <a class="collapse-item" href="/marker/map">MAP</a>
+                </div>
+            </div>
+        </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider">
 
@@ -150,6 +174,13 @@
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>Live Chart</span></a>
         </li>
+        <c:if test="${loginadm != null}">
+            <li class="nav-item">
+                <a class="nav-link" href="/websocket">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Web Socket</span></a>
+            </li>
+        </c:if>
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -462,14 +493,6 @@
 <!-- Page level plugins -->
 <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="/js/demo/datatables-demo.js"></script>
-
-
-<!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

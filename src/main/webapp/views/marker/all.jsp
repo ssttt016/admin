@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
-    .item_img{
+    .marker_img{
         width:80px;
     }
 
@@ -10,59 +10,59 @@
         width:300px;
     }
 </style>
+<script>
+    let marker_search = {
+        init:function(){
+            $('#search_btn').click(function(){
+                $('#search_form').attr({
+                    method:'post',
+                    action:'/marker/search'
+                });
+                $('#search_form').submit();
+            });
+        }
+    };
+
+    $(function(){
+       marker_search.init();
+    });
+</script>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Item All</h1>
+    <h1 class="h3 mb-2 text-gray-800">Marker All</h1>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
-<%--        search form start--%>
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Item All</h6>
-            <form action="/item/search" method="get" id="search_form" class="form-inline well">
-
+            <h6 class="m-0 font-weight-bold text-primary">Marker All</h6>
+            <form id="search_form" class="form-inline well">
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="name">Name:</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Enter title"
-                               value="${ms.name}"
-                        >
+                    <label class="control-label col-sm-5" for="loc">Location: </label>
+                    <div class="col-sm-4">
+                        <select name="loc" class="form-control" id="loc">
+                            <option value="" <c:if test="${ms.loc==''}">selected</c:if>>지역</option>
+                            <option value="S" <c:if test="${ms.loc=='S'}">selected</c:if>>서울</option>
+                            <option value="B" <c:if test="${ms.loc=='B'}">selected</c:if>>부산</option>
+                            <option value="J" <c:if test="${ms.loc=='J'}">selected</c:if>>제주</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="price">Price:</label>
-                    <div class="col-sm-10">
-                        <input type="number" name="price" class="form-control" id="price" placeholder="Enter title"
-                               value="${ms.price}"
-                        >
+                    <label class="control-label col-sm-2" for="title">Title:</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="title" class="form-control" id="title" placeholder="Enter title"
+                        value="${ms.title}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="startdate">Start Date:</label>
-                    <div class="col-sm-10">
-                        <input type="date" name="startdate" class="form-control" id="startdate" placeholder="Enter title"
-                               value="${ms.startdate}"
-                        >
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="enddate">End Date:</label>
-                    <div class="col-sm-10">
-                        <input type="date" name="enddate" class="form-control" id="enddate" placeholder="Enter title"
-                               value="${ms.enddate}"
-                        >
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-2">
-                        <button id="search_btn" type="submit" class="btn btn-info">Search</button>
+                    <div class="col-sm-offset-2 col-sm-4">
+                        <button id="search_btn" type="button" class="btn btn-primary">Search</button>
                     </div>
                 </div>
             </form>
         </div>
-<%--    search form end--%>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -70,18 +70,22 @@
                     <tr>
                         <th>Image</th>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Rdate</th>
+                        <th>Title</th>
+                        <th>LAT</th>
+                        <th>LNG</th>
+                        <th>Loc</th>
+                        <th>Target</th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
                         <th>Image</th>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Rdate</th>
+                        <th>Title</th>
+                        <th>LAT</th>
+                        <th>LNG</th>
+                        <th>Loc</th>
+                        <th>Target</th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -89,13 +93,15 @@
                         <tr>
                             <td>
                                 <a href="#" data-toggle="modal" data-target="#target${obj.id}">
-                                    <img src="/uimg/${obj.imgname}" class="item_img"/>
+                                    <img src="/uimg/${obj.img}" class="marker_img"/>
                                 </a>
                             </td>
-                            <td><a href="/item/detail?id=${obj.id}">${obj.id}</a></td>
-                            <td>${obj.name}</td>
-                            <td><fmt:formatNumber type="number" pattern="###,###원" value="${obj.price}"/></td>
-                            <td><fmt:formatDate  value="${obj.rdate}" pattern="dd-MM-yyyy" /></td>
+                            <td><a href="/marker/detail?id=${obj.id}">${obj.id}</a></td>
+                            <td>${obj.title}</td>
+                            <td>${obj.lat}</td>
+                            <td>${obj.lng}</td>
+                            <td>${obj.loc}</td>
+                            <td>${obj.target}</td>
                         </tr>
 
                         <!-- Modal -->
@@ -108,11 +114,11 @@
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>${obj.name}</p>
-                                        <img src="/uimg/${obj.imgname}" class="modal_img"/>
+                                        <p>${obj.title}</p>
+                                        <img src="/uimg/${obj.img}" class="modal_img"/>
                                     </div>
                                     <div class="modal-footer">
-                                        <a href="/item/detail?id=${obj.id}" class="btn btn-info" role="button">Detail</a>
+                                        <a href="/marker/detail?id=${obj.id}" class="btn btn-info" role="button">Detail</a>
                                         <a href="#" class="btn btn-info" data-dismiss="modal" role="button">Close</a>
                                     </div>
                                 </div>
