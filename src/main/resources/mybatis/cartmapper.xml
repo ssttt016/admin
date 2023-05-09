@@ -5,6 +5,11 @@
 <mapper namespace="com.kbstar.mapper.CartMapper">
 
     <!-- 들어간것은 parameterType, 결과값은 resultType -->
+    <select id="sumcart" parameterType="Integer" resultType="Integer">
+        SELECT sum(i.price * c.cnt)
+        from cart c join item i
+                         on c.item_id = i.id
+    </select>
     <select id="select" parameterType="Integer" resultType="cart">
         SELECT c.id, c.cust_id, c.item_id, c.cnt, c.rdate, cu.name AS cust_name, it.name AS item_name, it.price AS item_price, it.imgname
         FROM cart c, cust cu, item it

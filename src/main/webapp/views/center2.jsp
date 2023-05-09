@@ -1,19 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-3d.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-<%--<script src="/js/monthly.js" type="text/javascript"></script>--%>
-<style>
-    #myAreaChart2{
-        width:800px;
-        height:330px;
-    }
-</style>
 <script>
     let websocket_center = {
         stompClient:null,
@@ -47,95 +33,8 @@
             });
         }
     };
-    let monthlychart = {
-        init:function(){
-            Highcharts.chart('myAreaChart', {
-                chart: {
-                    type: 'column',
-                    options3d: {
-                        enabled: true,
-                        alpha: 15,
-                        beta: 15,
-                        viewDistance: 25,
-                        depth: 40
-                    }
-                },
-
-                title: {
-                    text: ' Electricity production in countries, grouped by continent',
-                    align: 'left'
-                },
-
-                xAxis: {
-                    labels: {
-                        skew3d: true,
-                        style: {
-                            fontSize: '16px'
-                        }
-                    }
-                },
-
-                yAxis: {
-                    allowDecimals: false,
-                    min: 0,
-                    title: {
-                        text: 'TWh',
-                        skew3d: true,
-                        style: {
-                            fontSize: '16px'
-                        }
-                    }
-                },
-
-                tooltip: {
-                    headerFormat: '<b>{point.key}</b><br>',
-                    pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} / {point.stackTotal}'
-                },
-
-                plotOptions: {
-                    series: {
-                        pointStart: 2016
-                    },
-                    column: {
-                        stacking: 'normal',
-                        depth: 40
-                    }
-                },
-
-                series: [{
-                    name: 'Male',
-                    data: [
-                        <c:forEach var="monthly" items="${monthly}">
-<%--                            <c:if test="${monthly.gender} == 'male'">--%>
-                                ${monthly.sum}
-<%--                            </c:if>--%>
-                        </c:forEach>
-                    //     for(let i = 0; i < monthly.length; i++){
-                    //         monthly[i].sum ,
-                    // }
-                    ],
-                    stack: 'Male'
-                }, {
-                        name: 'Female',
-                        data: [
-                            <c:forEach var="monthly" items="${monthly}">
-<%--                                <c:if test="${monthly.gender} == 'female'">--%>
-                                    ${monthly.sum},
-<%--                                </c:if>--%>
-                            </c:forEach>
-                        ],
-                        stack: 'Femala'
-                    }
-                ]
-            });
-
-
-        }
-    };
-
     $(function(){
         websocket_center.connect();
-        monthlychart.init();
     });
 </script>
 
@@ -279,7 +178,8 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div
+                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -299,8 +199,7 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-area">
-                        <div id="myAreaChart"></div>
-<%--                        <canvas id="myAreaChart"></canvas>--%>
+                        <canvas id="myAreaChart"></canvas>
                     </div>
                 </div>
             </div>

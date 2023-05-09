@@ -3,32 +3,57 @@ package com.kbstar.controller;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
 import com.kbstar.dto.Adm;
 import com.kbstar.dto.Cust;
+import com.kbstar.dto.Sales;
 import com.kbstar.service.AdmService;
+import com.kbstar.service.SalesService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @Slf4j
 public class MainController {
+    @Value("${adminserver}")
+    String adminserver;
     @Autowired
     private BCryptPasswordEncoder encoder;
     @Autowired
     AdmService admService;
-    @RequestMapping("")
-    public String main(){
+    @Autowired
+    SalesService salesService;
+    @RequestMapping("/")
+    public String main(Model model) throws Exception {
+        List<Sales> list = null;
+        list = salesService.monthly();
+
+        JSONArray ja = new JSONArray();
+        for(Sales a : list){
+            JSONObject jo = new JSONObject();
+            jo.put("gender",a.getGender());
+            jo.put("sum",a.getSum());
+            jo.put("monthly",a.getMonthly());
+            ja.add(jo);
+        }
+
+        model.addAttribute("monthly",ja);
+        model.addAttribute("adminserver",adminserver);
+
         return "index";
     }
 
     @RequestMapping("/livechart")
     public String livechart(Model model){
         model.addAttribute("center","livechart");
+        model.addAttribute("adminserver",adminserver);
         return "index";
     }
     @RequestMapping("/charts")
@@ -111,6 +136,8 @@ public class MainController {
     @RequestMapping("/websocket")
     public String websocket(Model model) {
         model.addAttribute("center","websocket");
+        model.addAttribute("adminserver",adminserver);
         return "index";
     }
+
 }
