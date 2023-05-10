@@ -32,21 +32,7 @@ public class MainController {
     SalesService salesService;
     @RequestMapping("/")
     public String main(Model model) throws Exception {
-        List<Sales> list = null;
-        list = salesService.monthly();
-
-        JSONArray ja = new JSONArray();
-        for(Sales a : list){
-            JSONObject jo = new JSONObject();
-            jo.put("gender",a.getGender());
-            jo.put("sum",a.getSum());
-            jo.put("monthly",a.getMonthly());
-            ja.add(jo);
-        }
-
-        model.addAttribute("monthly",ja);
         model.addAttribute("adminserver",adminserver);
-
         return "index";
     }
 

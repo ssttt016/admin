@@ -13,8 +13,8 @@ public class Sales {
     private String gender;
 
 
-//    chart 용
-    private int sum;
-    private String monthly;
+////    chart 용
+//    private int sum;
+//    private String monthly;
 
 }

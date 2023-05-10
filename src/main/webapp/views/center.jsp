@@ -2,10 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 
 <%--<script src="/js/monthly.js" type="text/javascript"></script>--%>
 <style>
@@ -18,7 +19,7 @@
     let websocket_center = {
         stompClient:null,
         init:function(){
-
+            this.connect();
         },
         connect:function(){
             var sid = this.id;
@@ -47,95 +48,120 @@
             });
         }
     };
-    let monthlychart = {
+
+    let center_chart1 = {
         init:function(){
-            Highcharts.chart('myAreaChart', {
-                chart: {
-                    type: 'column',
-                    options3d: {
-                        enabled: true,
-                        alpha: 15,
-                        beta: 15,
-                        viewDistance: 25,
-                        depth: 40
-                    }
-                },
-
-                title: {
-                    text: ' Electricity production in countries, grouped by continent',
-                    align: 'left'
-                },
-
-                xAxis: {
-                    labels: {
-                        skew3d: true,
-                        style: {
-                            fontSize: '16px'
-                        }
-                    }
-                },
-
-                yAxis: {
-                    allowDecimals: false,
-                    min: 0,
-                    title: {
-                        text: 'TWh',
-                        skew3d: true,
-                        style: {
-                            fontSize: '16px'
-                        }
-                    }
-                },
-
-                tooltip: {
-                    headerFormat: '<b>{point.key}</b><br>',
-                    pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} / {point.stackTotal}'
-                },
-
-                plotOptions: {
-                    series: {
-                        pointStart: 2016
-                    },
-                    column: {
-                        stacking: 'normal',
-                        depth: 40
-                    }
-                },
-
-                series: [{
-                    name: 'Male',
-                    data: [
-                        <c:forEach var="monthly" items="${monthly}">
-<%--                            <c:if test="${monthly.gender} == 'male'">--%>
-                                ${monthly.sum}
-<%--                            </c:if>--%>
-                        </c:forEach>
-                    //     for(let i = 0; i < monthly.length; i++){
-                    //         monthly[i].sum ,
-                    // }
-                    ],
-                    stack: 'Male'
-                }, {
-                        name: 'Female',
-                        data: [
-                            <c:forEach var="monthly" items="${monthly}">
-<%--                                <c:if test="${monthly.gender} == 'female'">--%>
-                                    ${monthly.sum},
-<%--                                </c:if>--%>
-                            </c:forEach>
-                        ],
-                        stack: 'Femala'
-                    }
-                ]
+            $.ajax({
+               url:'/chart1',
+               success:function(data){
+                   center_chart1.display(data);
+               }
             });
-
+        },
+        display:function(data){
+            Highcharts.chart('container1', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Monthly Average Temperature'
+                },
+                subtitle: {
+                    text: 'Source: ' +
+                        '<a href="https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature" ' +
+                        'target="_blank">Wikipedia.com</a>'
+                },
+                xAxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Temperature (°C)'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: data
+            });
 
         }
     };
 
+    let center_chart2 = {
+        init:function(){
+            $.ajax({
+                url:'/chart1',
+                success:function(data){
+                    center_chart2.display(data);
+                }
+            });
+        },
+        display:function(data){
+            Highcharts.chart('container2', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Monthly Average Rainfall'
+                },
+                subtitle: {
+                    text: 'Source: WorldClimate.com'
+                },
+                xAxis: {
+                    categories: [
+                        'Jan',
+                        'Feb',
+                        'Mar',
+                        'Apr',
+                        'May',
+                        'Jun',
+                        'Jul',
+                        'Aug',
+                        'Sep',
+                        'Oct',
+                        'Nov',
+                        'Dec'
+                    ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Rainfall (mm)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: data
+            });
+        }
+    };
+
     $(function(){
-        websocket_center.connect();
-        monthlychart.init();
+        websocket_center.init();
+        center_chart1.init();
+        center_chart2.init();
+
+        setInterval(center_chart1.init,5000);
+        setInterval(center_chart2.init,5000);
     });
 </script>
 
@@ -276,18 +302,18 @@
     <div class="row">
 
         <!-- Area Chart -->
-        <div class="col-xl-8 col-lg-7">
+        <div class="col-xl-6 col-lg-7">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
                     <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                             aria-labelledby="dropdownMenuLink">
+                             aria-labelledby="dropdownMenuLink2">
                             <div class="dropdown-header">Dropdown Header:</div>
                             <a class="dropdown-item" href="#">Action</a>
                             <a class="dropdown-item" href="#">Another action</a>
@@ -298,16 +324,14 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-area">
-                        <div id="myAreaChart"></div>
-<%--                        <canvas id="myAreaChart"></canvas>--%>
+                    <div class="chart-area" id="container1">
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Pie Chart -->
-        <div class="col-xl-4 col-lg-5">
+        <div class="col-xl-6 col-lg-7">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div
@@ -330,19 +354,7 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
+                    <div class="chart-area" id="container2">
                     </div>
                 </div>
             </div>
