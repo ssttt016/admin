@@ -13,6 +13,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cefdd74a1aa766d9e74b1532c04f5b77"></script>
+<%--websocket library--%>
 <script src="/webjars/sockjs-client/sockjs.min.js"></script>
 <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 <%--marker  kakao script--%>
@@ -175,6 +176,11 @@
                 <span>Live Chart</span></a>
         </li>
         <c:if test="${loginadm != null}">
+            <li class="nav-item">
+                <a class="nav-link" href="/callcenter">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>1:1</span></a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/websocket">
                     <i class="fas fa-fw fa-cog"></i>

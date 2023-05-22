@@ -125,5 +125,11 @@ public class MainController {
         model.addAttribute("adminserver",adminserver);
         return "index";
     }
+    @RequestMapping("/callcenter")
+    public String callcenter(Model model) {
+        model.addAttribute("center","callcenter");
+        model.addAttribute("adminserver",adminserver);
+        return "index";
+    }
 
 }

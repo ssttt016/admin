@@ -1,6 +1,7 @@
 package com.kbstar.controller;
 
 import com.kbstar.dto.Msg;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -8,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@Slf4j
 public class MsgController {
     @Autowired
     SimpMessagingTemplate template;

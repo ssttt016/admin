@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedHeader(CorsConfiguration.ALL);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**, /ws", configuration);
-
+// 상대방이 /** 없이나 /ws로 올때도 허용하겠다
         http.httpBasic()
                 .and().authorizeRequests()
                 .anyRequest().permitAll()
